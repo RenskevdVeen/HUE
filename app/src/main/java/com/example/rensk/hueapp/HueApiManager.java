@@ -26,7 +26,7 @@ public class HueApiManager {
     }
 
     public void getHue(){
-        final String url = "http://145.48.205.33/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB";
+        final String url = "http://192.168.2.4/api/8144c280f65aa9c4749a7657ae82b1b";
         final JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,

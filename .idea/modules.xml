@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HueApp.iml" filepath="$PROJECT_DIR$/HueApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HUE.iml" filepath="$PROJECT_DIR$/HUE.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
