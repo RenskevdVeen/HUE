@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity implements HueListener {
             @Override
             public void onItemClick(int position, View v) {
                 Intent intent = new Intent(getApplicationContext(), Detail.class);
-                Light lights1 =lights.get(position);
-                intent.putExtra("LIGHT_OBJECT", (Serializable) lights1);
+                Light selectedLight = lights.get(position);
+                intent.putExtra("LIGHT_OBJECT", (Serializable) selectedLight);
                 startActivity(intent);
             }
 

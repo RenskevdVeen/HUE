@@ -28,12 +28,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import okhttp3.OkHttpClient;
 
 public class Detail extends AppCompatActivity {
     TextView connectedId;
@@ -59,6 +63,10 @@ public class Detail extends AppCompatActivity {
     Switch onoffswitch;
 
 
+    TextView on;
+    Light selectedLight;
+    URL url;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +74,14 @@ public class Detail extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        Light selectedLight = (Light) intent.getSerializableExtra("LIGHT_OBJECT");
+        selectedLight = (Light) intent.getSerializableExtra("LIGHT_OBJECT");
+        String[] lampNumber = selectedLight.getLightnum().split("");
+        int fullLampNumber = Integer.valueOf(lampNumber[2]) + checkLampNumber();
+        try {
+            url = new URL("http://145.48.205.33/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB/lights/" + fullLampNumber + "/state");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
         name = findViewById(R.id.name_id);
         name.setText(selectedLight.getLightnum());
@@ -201,6 +216,56 @@ public class Detail extends AppCompatActivity {
         return isConnected;
     }
 
-}
+        public int checkLampNumber() {
+            char lampLetter = selectedLight.getLightnum().charAt(0);
+            int lampSerie = 0;
+            switch (lampLetter) {
+                case 'A':
+                    lampSerie = 0;
+                    break;
+                case 'B':
+                    lampSerie = 3;
+                    break;
+                case 'C':
+                    lampSerie = 6;
+                    break;
+            }
+            return lampSerie;
+        }
+
+        public void sendJSON() {
+            try {
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("PUT");
+                conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+                conn.setRequestProperty("Accept", "application/json");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+
+                JSONObject jsonParam = new JSONObject();
+                try {
+                    jsonParam.put("on", false);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.i("JSON", jsonParam.toString());
+                DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+                os.writeBytes(jsonParam.toString());
+
+                os.flush();
+                os.close();
+
+                Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+                Log.i("MSG", conn.getResponseMessage());
+
+                conn.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 
