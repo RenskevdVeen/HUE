@@ -34,6 +34,7 @@ public class AllDetail extends AppCompatActivity {
     int saturationvalueAllInt;
     ImageView colorimage;
     Switch onoffallswitch;
+    ImageView colorpicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +102,7 @@ public class AllDetail extends AppCompatActivity {
         colorAll = findViewById(R.id.colorAll_id);
         colorAll.setText(R.string.color);
 
+        colorpicked = findViewById(R.id.colorpickedAll_id);
         colorimage = (ImageView) findViewById(R.id.color_picker_ALl_id);
         BitmapDrawable bitmapDrawable = (BitmapDrawable)colorimage.getDrawable();
         bitmap = bitmapDrawable.getBitmap();
@@ -121,11 +123,12 @@ public class AllDetail extends AppCompatActivity {
                             redValue = Color.red(pixel);
                             blueValue = Color.blue(pixel);
                             greenValue = Color.green(pixel);
+                            colorpicked.setBackgroundColor(Color.rgb(redValue, greenValue, blueValue));
                             Color.RGBToHSV(redValue, greenValue, blueValue, huevalue);
                             hue = (int) (huevalue[0] * 182.04);
-                            System.out.println("All");
                             System.out.println("Red" + redValue + " blue" + blueValue + " Green " + greenValue + " Color" + pixel);
                             System.out.println(hue);
+
                             break;
                         }else{
                             System.out.println("pixel is 0");

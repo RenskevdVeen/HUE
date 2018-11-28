@@ -4,17 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -22,22 +18,12 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedWriter;
 import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-
-import okhttp3.OkHttpClient;
 
 public class Detail extends AppCompatActivity {
     TextView connectedId;
@@ -95,7 +81,10 @@ public class Detail extends AppCompatActivity {
         }
         brightnessvalueid.setText(String.valueOf(brightnessvalue));
         seekbarbrightness = findViewById(R.id.seekbarbrightness);
-        seekbarbrightness.setProgress(selectedLight.getBrightness());
+        System.out.println(selectedLight.getBrightness());
+        seekbarbrightness.setProgress((selectedLight.getBrightness()*100/254));
+
+        System.out.println((selectedLight.getBrightness()*100/254));
         brightnessvalueid.setText(String.valueOf(selectedLight.getBrightness() + 1));
         seekbarbrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -122,7 +111,7 @@ public class Detail extends AppCompatActivity {
         saturation.setText(R.string.saturation);
         saturationvalueid = findViewById(R.id.saturationvalue_id);
         seekBarSaturation = findViewById(R.id.seekbarsaturation_id);
-        seekBarSaturation.setProgress(selectedLight.getSaturation());
+        seekBarSaturation.setProgress(selectedLight.getSaturation()*100/254);
         saturationvalueid.setText(String.valueOf(selectedLight.getSaturation() + 1));
         seekBarSaturation.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override

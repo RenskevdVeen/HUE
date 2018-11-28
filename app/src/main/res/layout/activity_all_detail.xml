@@ -167,4 +167,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/onoffall_id"
         app:layout_constraintTop_toTopOf="@+id/onoffall_id" />
+
+    <ImageView
+        android:id="@+id/colorpickedAll_id"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:src="@android:color/background_light"
+        app:layout_constraintBottom_toBottomOf="@+id/color_picker_ALl_id"
+        app:layout_constraintEnd_toStartOf="@+id/color_picker_ALl_id"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/color_picker_ALl_id" />
 </android.support.constraint.ConstraintLayout>
