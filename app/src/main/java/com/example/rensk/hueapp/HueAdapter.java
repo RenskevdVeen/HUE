@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -32,6 +33,11 @@ public class HueAdapter extends RecyclerView.Adapter<HueAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Light light = lights.get(position);
         holder.name.setText(light.getLightnum());
+        if (light.getAan().equals("true")) {
+            holder.lamp.setImageResource(R.drawable.lampaan);
+        }else{
+            holder.lamp.setImageResource(R.drawable.lampuit);
+        }
     }
 
     @Override
@@ -42,13 +48,14 @@ public class HueAdapter extends RecyclerView.Adapter<HueAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         TextView name;
+        ImageView lamp;
 
         public ViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
             view.setOnLongClickListener(this);
             name = view.findViewById(R.id.txt_name_id);
-
+            lamp = view.findViewById(R.id.lamp_img);
         }
 
 

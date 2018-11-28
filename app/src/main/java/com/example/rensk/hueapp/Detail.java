@@ -48,7 +48,6 @@ public class Detail extends AppCompatActivity {
     float[] huevalue = new float[3];
     Switch onoffswitch;
     boolean switchValue;
-
     Light selectedLight;
     URL url;
 
@@ -92,7 +91,6 @@ public class Detail extends AppCompatActivity {
                 brightnessvalue = i * 254 / 100;
                 brightnessvalueid.setText(String.valueOf(brightnessvalue + 1));
                 System.out.println("seekbar value" + brightnessvalue);
-                sendJSON();
 
             }
 
@@ -119,7 +117,6 @@ public class Detail extends AppCompatActivity {
                 saturationvalue = i * 254 / 100;
                 saturationvalueid.setText(String.valueOf((saturationvalue + 1)));
                 System.out.println("Seekbar saturation value" + saturationvalue);
-                sendJSON();
             }
 
             @Override
@@ -159,7 +156,6 @@ public class Detail extends AppCompatActivity {
                             hue = (int) (huevalue[0] * 182.04);
                             System.out.println("Red" + redValue + " blue" + blueValue + " Green " + greenValue + " Color" + pixel);
                             System.out.println(hue);
-                            sendJSON();
                             break;
                         }else{
                             System.out.println("pixel is 0");
@@ -172,23 +168,20 @@ public class Detail extends AppCompatActivity {
 
 
         onoffswitch = findViewById(R.id.switchdetail_id);
-        if(selectedLight.getAan().equals("true")){
-            //on.setText(R.string.on);
+        if (selectedLight.getAan().equals("true")){
             onoffswitch.setChecked(true);
         }else{
-            onoffswitch.setChecked(false);
+
         }
         onoffswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (onoffswitch.isChecked()){
                     on.setText(R.string.on);
-                    switchValue = true;
-                    sendJSON();
 
+                    sendJSON();
                 }else{
                     on.setText(R.string.off);
-                    switchValue= false;
                     sendJSON();
                 }
             }
@@ -244,10 +237,8 @@ public class Detail extends AppCompatActivity {
 
                 JSONObject jsonParam = new JSONObject();
                 try {
-                    jsonParam.put("on", switchValue);
-                    jsonParam.put("bri", brightnessvalue);
-                    jsonParam.put("hue", hue);
-                    jsonParam.put("sat", saturationvalue);
+                    jsonParam.put("on", false);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

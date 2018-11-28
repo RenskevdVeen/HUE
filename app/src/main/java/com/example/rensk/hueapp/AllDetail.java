@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -13,7 +14,14 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
+
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class AllDetail extends AppCompatActivity {
     TextView nameall;
@@ -34,13 +42,22 @@ public class AllDetail extends AppCompatActivity {
     int saturationvalueAllInt;
     ImageView colorimage;
     Switch onoffallswitch;
-    ImageView colorpicked;
-
+    URL url;
+    boolean switchValue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_detail);
 
+        try {
+            for (int i = 1; i < 10; i++) {
+                if (i == 4) continue;
+                url = new URL("http://145.48.205.33/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB/lights/" + i + "/state");
+            }
+        }catch(MalformedURLException e){
+            e.printStackTrace();
+
+        }
         nameall = findViewById(R.id.all_name_id);
         nameall.setText(R.string.all);
 
@@ -102,7 +119,7 @@ public class AllDetail extends AppCompatActivity {
         colorAll = findViewById(R.id.colorAll_id);
         colorAll.setText(R.string.color);
 
-        colorpicked = findViewById(R.id.colorpickedAll_id);
+
         colorimage = (ImageView) findViewById(R.id.color_picker_ALl_id);
         BitmapDrawable bitmapDrawable = (BitmapDrawable)colorimage.getDrawable();
         bitmap = bitmapDrawable.getBitmap();
@@ -123,7 +140,7 @@ public class AllDetail extends AppCompatActivity {
                             redValue = Color.red(pixel);
                             blueValue = Color.blue(pixel);
                             greenValue = Color.green(pixel);
-                            colorpicked.setBackgroundColor(Color.rgb(redValue, greenValue, blueValue));
+                            //colorpicked.setBackgroundColor(Color.rgb(redValue, greenValue, blueValue));
                             Color.RGBToHSV(redValue, greenValue, blueValue, huevalue);
                             hue = (int) (huevalue[0] * 182.04);
                             System.out.println("Red" + redValue + " blue" + blueValue + " Green " + greenValue + " Color" + pixel);
@@ -145,17 +162,52 @@ public class AllDetail extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (onoffallswitch.isChecked()){
                     onall.setText(R.string.on);
-
+                    switchValue = true;
+                    sendJSON();
                 }else{
                     onall.setText(R.string.off);
+                    switchValue= false;
+                    sendJSON();
 
                 }
             }
         });
 
-
-
-
-
     }
+    public void sendJSON() {
+        try {
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+
+            JSONObject jsonParam = new JSONObject();
+            try {
+                jsonParam.put("on", switchValue);
+                jsonParam.put("bri", brightnessvalueallint);
+                jsonParam.put("hue", hue);
+                jsonParam.put("sat", saturationvalueAllInt);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            Log.i("JSON", jsonParam.toString());
+            DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+            os.writeBytes(jsonParam.toString());
+
+            os.flush();
+            os.close();
+
+            Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+            Log.i("MSG", conn.getResponseMessage());
+
+            conn.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
