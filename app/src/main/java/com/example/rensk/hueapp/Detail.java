@@ -61,9 +61,7 @@ public class Detail extends AppCompatActivity {
     int hue;
     float[] huevalue = new float[3];
     Switch onoffswitch;
-
-
-    TextView on;
+    
     Light selectedLight;
     URL url;
 
