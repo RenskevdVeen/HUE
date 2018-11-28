@@ -22,6 +22,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -230,8 +231,14 @@ public class Detail extends AppCompatActivity implements HueListener{
         }
 
         public void sendJSON() {
+            HttpURLConnection conn = null;
             try {
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn = (HttpURLConnection) url.openConnection();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+
                 conn.setRequestMethod("PUT");
                 conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
                 conn.setRequestProperty("Accept", "application/json");
@@ -259,6 +266,9 @@ public class Detail extends AppCompatActivity implements HueListener{
                 conn.disconnect();
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+            finally {
+                conn.disconnect();
             }
         }
 
