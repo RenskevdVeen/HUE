@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -25,7 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Detail extends AppCompatActivity {
+public class Detail extends AppCompatActivity implements HueListener{
     TextView connectedId;
     TextView resultId;
     Button testBrightnessId;
@@ -57,6 +58,8 @@ public class Detail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         Intent intent = getIntent();
         selectedLight = (Light) intent.getSerializableExtra("LIGHT_OBJECT");
@@ -267,7 +270,17 @@ public class Detail extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+    @Override
+    public void onLightsAvailable(Light light) {
+
     }
+
+    @Override
+    public void onLightsError(String err) {
+
+    }
+}
 
 
 
