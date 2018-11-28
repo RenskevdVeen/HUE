@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.Serializable;
@@ -19,10 +20,18 @@ public class MainActivity extends AppCompatActivity implements HueListener {
     RecyclerView recyclerView;
     ArrayList<Light> lights = new ArrayList<>();;
     HueAdapter hueAdapter;
+    TextView name;
+    Button all;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        name = findViewById(R.id.name_txt_id);
+        name.setText(R.string.hue);
+
+        all = findViewById(R.id.button_all_id);
+        all.setText(R.string.all);
 
         recyclerView = findViewById(R.id.recycle);
         recyclerView.setHasFixedSize(true);
@@ -34,6 +43,15 @@ public class MainActivity extends AppCompatActivity implements HueListener {
         apiManager = new HueApiManager(getApplicationContext(), this);
         apiManager.getHue();
 
+        all.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AllDetail.class);
+                intent.putExtra("LIGHT_LIST", (Serializable) lights);
+                System.out.println(lights.toString());
+                startActivity(intent);
+            }
+        });
 
         hueAdapter.setOnItemClickListener(new HueAdapter.ClickListener() {
             @Override

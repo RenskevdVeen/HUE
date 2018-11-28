@@ -2,7 +2,10 @@ package com.example.rensk.hueapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -10,11 +13,16 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,8 +33,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
-public class Detail extends AppCompatActivity  {
+public class Detail extends AppCompatActivity {
     TextView connectedId;
     TextView resultId;
     Button testBrightnessId;
@@ -39,11 +48,17 @@ public class Detail extends AppCompatActivity  {
     TextView saturationvalueid;
     SeekBar seekBarSaturation;
     int saturationvalue;
-    HueApiManager apiManager;
-
-
-
+    TextView color;
+    ImageView colorimage;
     TextView on;
+    Bitmap bitmap;
+    int redValue,blueValue,greenValue;
+    int pixel;
+    int hue;
+    float[] huevalue = new float[3];
+    Switch onoffswitch;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,21 +74,21 @@ public class Detail extends AppCompatActivity  {
         brightness.setText(R.string.brightness);
         brightnessvalueid = findViewById(R.id.brightnessvalue_id);
         on = findViewById(R.id.onoff_id);
-        if (lights1.getAan().equals("true")){
+        if (lights1.getAan().equals("true")) {
             on.setText(R.string.on);
-        }else{
+        } else {
             on.setText(R.string.off);
         }
         brightnessvalueid.setText(String.valueOf(brightnessvalue));
         seekbarbrightness = findViewById(R.id.seekbarbrightness);
         seekbarbrightness.setProgress(lights1.getBrightness());
-        brightnessvalueid.setText(String.valueOf(lights1.getBrightness()+1));
+        brightnessvalueid.setText(String.valueOf(lights1.getBrightness() + 1));
         seekbarbrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                brightnessvalue = i*254/100;
+                brightnessvalue = i * 254 / 100;
                 brightnessvalueid.setText(String.valueOf(brightnessvalue + 1));
-                System.out.println("seekbar value"+ brightnessvalue);
+                System.out.println("seekbar value" + brightnessvalue);
 
             }
 
@@ -93,13 +108,13 @@ public class Detail extends AppCompatActivity  {
         saturationvalueid = findViewById(R.id.saturationvalue_id);
         seekBarSaturation = findViewById(R.id.seekbarsaturation_id);
         seekBarSaturation.setProgress(lights1.getSaturation());
-        saturationvalueid.setText(String.valueOf(lights1.getSaturation()+ 1));
+        saturationvalueid.setText(String.valueOf(lights1.getSaturation() + 1));
         seekBarSaturation.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                saturationvalue = i*254/100;
+                saturationvalue = i * 254 / 100;
                 saturationvalueid.setText(String.valueOf((saturationvalue + 1)));
-                System.out.println("Seekbar saturation value"+ saturationvalue);
+                System.out.println("Seekbar saturation value" + saturationvalue);
             }
 
             @Override
@@ -113,6 +128,58 @@ public class Detail extends AppCompatActivity  {
             }
         });
 
+        color = findViewById(R.id.color_id);
+        color.setText(R.string.color);
+        colorimage = (ImageView) findViewById(R.id.color_picker_id);
+        BitmapDrawable bitmapDrawable = (BitmapDrawable)colorimage.getDrawable();
+        bitmap = bitmapDrawable.getBitmap();
+
+        colorimage.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        //int color = bitmap.getPixel(event.getX(),event.getY());
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (((int)event.getX()>=1 &&(int)event.getY()>=1)&& (int)event.getX()<bitmap.getWidth() && (int) event.getY()<bitmap.getHeight())
+                        {
+                        pixel = bitmap.getPixel((int)event.getX(),(int)event.getY());
+
+                            System.out.println(pixel);
+                            redValue = Color.red(pixel);
+                            blueValue = Color.blue(pixel);
+                            greenValue = Color.green(pixel);
+                            Color.RGBToHSV(redValue, greenValue, blueValue, huevalue);
+                            hue = (int) (huevalue[0] * 182.04);
+                            System.out.println("Red" + redValue + " blue" + blueValue + " Green " + greenValue + " Color" + pixel);
+                            System.out.println(hue);
+                            break;
+                        }else{
+                            System.out.println("pixel is 0");
+                        }
+                }
+
+                return true;
+            }
+        });
+
+
+        onoffswitch = findViewById(R.id.switchdetail_id);
+        onoffswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (onoffswitch.isChecked()){
+                    on.setText(R.string.on);
+
+                }else{
+                    on.setText(R.string.off);
+
+                }
+            }
+        });
+
+
         //TESTCODE VAN SANDER
         connectedId = (TextView) findViewById(R.id.connectedId);
         resultId = (TextView) findViewById(R.id.resultId);
@@ -123,11 +190,12 @@ public class Detail extends AppCompatActivity  {
                 new HTTPAsyncTask().execute("http://192.168.2.4/api/8144c280f65aa9c4749a7657ae82b1b");
             }
         });
-                checkNetworkConnection();
+        checkNetworkConnection();
     }
 
 
     //TESTCODE VAN SANDER
+
 
 
     //Checkt of er netwerk verbinding is
@@ -162,6 +230,7 @@ public class Detail extends AppCompatActivity  {
                 return "Unable to retrieve web page. URL may be invalid.";
             }
         }
+
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
@@ -191,6 +260,7 @@ public class Detail extends AppCompatActivity  {
             return conn.getResponseMessage() + "";
 
         }
+
         private JSONObject buidJsonObject() throws JSONException {
 
             JSONObject jsonObject = new JSONObject();
@@ -199,6 +269,7 @@ public class Detail extends AppCompatActivity  {
 
             return jsonObject;
         }
+
         private void setPostRequestContent(HttpURLConnection conn,
                                            JSONObject jsonObject) throws IOException {
 
@@ -210,7 +281,8 @@ public class Detail extends AppCompatActivity  {
             writer.close();
             os.close();
         }
-        }
     }
+
+}
 
 

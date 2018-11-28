@@ -4,96 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Detail">
+    tools:context=".AllDetail">
 
     <TextView
-        android:id="@+id/name_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/onoff_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/name_id"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/name_id"
-        app:layout_constraintTop_toTopOf="@+id/name_id" />
-
-    <TextView
-        android:id="@+id/brightnessId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:text="TextView"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_id" />
-
-    <SeekBar
-        android:id="@+id/seekbarbrightness"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/brightnessId"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/brightnessvalue_id"
-        app:layout_constraintTop_toTopOf="@+id/brightnessId" />
-
-    <Button
-        android:id="@+id/testBrightnessId"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/color_id" />
-
-    <TextView
-        android:id="@+id/connectedId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/testBrightnessId" />
-
-    <TextView
-        android:id="@+id/resultId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connectedId" />
-
-    <TextView
-        android:id="@+id/brightnessvalue_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="TextView"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/brightnessId"
-        app:layout_constraintStart_toEndOf="@+id/brightnessId"
-        app:layout_constraintTop_toTopOf="@+id/brightnessId" />
-
-    <TextView
-        android:id="@+id/saturation_id"
+        android:id="@+id/all_name_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -101,7 +15,94 @@
         android:text="TextView"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/brightnessId" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/onoffall_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/all_name_id"
+        app:layout_constraintTop_toTopOf="@+id/all_name_id" />
+
+    <TextView
+        android:id="@+id/brightnessAll_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/all_name_id" />
+
+    <SeekBar
+        android:id="@+id/seekbarbrightnessall"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/brightnessallvalue_id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/brightnessallvalue_id"
+        app:layout_constraintTop_toTopOf="@+id/brightnessallvalue_id" />
+
+    <Button
+        android:id="@+id/testBrightnessallId"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/colorAll_id" />
+
+    <TextView
+        android:id="@+id/connectedallId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/testBrightnessallId" />
+
+    <TextView
+        android:id="@+id/resultallId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/connectedallId" />
+
+    <TextView
+        android:id="@+id/brightnessallvalue_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="TextView"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/brightnessAll_id"
+        app:layout_constraintStart_toEndOf="@+id/brightnessAll_id"
+        app:layout_constraintTop_toTopOf="@+id/brightnessAll_id">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/saturationall_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/brightnessAll_id" />
 
     <TextView
         android:id="@+id/saturationvalue_id"
@@ -110,12 +111,12 @@
         android:layout_marginStart="8dp"
         android:text="TextView"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/saturation_id"
-        app:layout_constraintStart_toEndOf="@+id/saturation_id"
-        app:layout_constraintTop_toTopOf="@+id/saturation_id" />
+        app:layout_constraintBottom_toBottomOf="@+id/saturationall_id"
+        app:layout_constraintStart_toEndOf="@+id/saturationall_id"
+        app:layout_constraintTop_toTopOf="@+id/saturationall_id" />
 
     <SeekBar
-        android:id="@+id/seekbarsaturation_id"
+        android:id="@+id/seekbarsaturationall_id"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -126,7 +127,7 @@
         app:layout_constraintTop_toTopOf="@+id/saturationvalue_id" />
 
     <TextView
-        android:id="@+id/color_id"
+        android:id="@+id/colorAll_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -139,7 +140,7 @@
         app:layout_constraintTop_toBottomOf="@+id/saturationvalue_id" />
 
     <ImageView
-        android:id="@+id/color_picker_id"
+        android:id="@+id/color_picker_ALl_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -149,23 +150,21 @@
         android:background="@drawable/wheel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.933"
-        app:layout_constraintStart_toEndOf="@+id/testBrightnessId"
-        app:layout_constraintTop_toBottomOf="@+id/color_id"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/testBrightnessallId"
+        app:layout_constraintTop_toBottomOf="@+id/colorAll_id"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/wheelcolor" />
 
     <Switch
-        android:id="@+id/switchdetail_id"
+        android:id="@+id/switchall_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:checked="false"
 
-        app:layout_constraintBottom_toBottomOf="@+id/onoff_id"
+        app:layout_constraintBottom_toBottomOf="@+id/onoffall_id"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/onoff_id"
-        app:layout_constraintTop_toTopOf="@+id/onoff_id" />
-
-
+        app:layout_constraintStart_toEndOf="@+id/onoffall_id"
+        app:layout_constraintTop_toTopOf="@+id/onoffall_id" />
 </android.support.constraint.ConstraintLayout>

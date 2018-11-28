@@ -4,4 +4,7 @@
     <string name="off">off</string>
     <string name="on">on</string>
     <string name="saturation">Saturation</string>
+    <string name="color">Color</string>
+    <string name="hue">Hue Lights</string>
+    <string name="all">All lights</string>
 </resources>
