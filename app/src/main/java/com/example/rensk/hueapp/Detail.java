@@ -43,13 +43,10 @@ public class Detail extends AppCompatActivity {
     TextView saturationvalueid;
     SeekBar seekBarSaturation;
     int saturationvalue;
-    HueApiManager apiManager;
-
-
-
     TextView on;
     Light selectedLight;
     URL url;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,32 +58,32 @@ public class Detail extends AppCompatActivity {
         String[] lampNumber = selectedLight.getLightnum().split("");
         int fullLampNumber = Integer.valueOf(lampNumber[2]) + checkLampNumber();
         try {
-            url = new URL("http://145.48.205.33/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB/lights/"+fullLampNumber+"/state");
+            url = new URL("http://145.48.205.33/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB/lights/" + fullLampNumber + "/state");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
         name = findViewById(R.id.name_id);
-        name.setText(lights1.getLightnum());
+        name.setText(selectedLight.getLightnum());
         brightness = findViewById(R.id.brightnessId);
         brightness.setText(R.string.brightness);
         brightnessvalueid = findViewById(R.id.brightnessvalue_id);
         on = findViewById(R.id.onoff_id);
-        if (lights1.getAan().equals("true")){
+        if (selectedLight.getAan().equals("true")) {
             on.setText(R.string.on);
-        }else{
+        } else {
             on.setText(R.string.off);
         }
         brightnessvalueid.setText(String.valueOf(brightnessvalue));
         seekbarbrightness = findViewById(R.id.seekbarbrightness);
-        seekbarbrightness.setProgress(lights1.getBrightness());
-        brightnessvalueid.setText(String.valueOf(lights1.getBrightness()+1));
+        seekbarbrightness.setProgress(selectedLight.getBrightness());
+        brightnessvalueid.setText(String.valueOf(selectedLight.getBrightness() + 1));
         seekbarbrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                brightnessvalue = i*254/100;
+                brightnessvalue = i * 254 / 100;
                 brightnessvalueid.setText(String.valueOf(brightnessvalue + 1));
-                System.out.println("seekbar value"+ brightnessvalue);
+                System.out.println("seekbar value" + brightnessvalue);
 
             }
 
@@ -105,14 +102,14 @@ public class Detail extends AppCompatActivity {
         saturation.setText(R.string.saturation);
         saturationvalueid = findViewById(R.id.saturationvalue_id);
         seekBarSaturation = findViewById(R.id.seekbarsaturation_id);
-        seekBarSaturation.setProgress(lights1.getSaturation());
-        saturationvalueid.setText(String.valueOf(lights1.getSaturation()+ 1));
+        seekBarSaturation.setProgress(selectedLight.getSaturation());
+        saturationvalueid.setText(String.valueOf(selectedLight.getSaturation() + 1));
         seekBarSaturation.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                saturationvalue = i*254/100;
+                saturationvalue = i * 254 / 100;
                 saturationvalueid.setText(String.valueOf((saturationvalue + 1)));
-                System.out.println("Seekbar saturation value"+ saturationvalue);
+                System.out.println("Seekbar saturation value" + saturationvalue);
             }
 
             @Override
@@ -126,7 +123,6 @@ public class Detail extends AppCompatActivity {
             }
         });
 
-        //TESTCODE VAN SANDER
         connectedId = (TextView) findViewById(R.id.connectedId);
         resultId = (TextView) findViewById(R.id.resultId);
         resultId.setText(url.toString());
@@ -144,7 +140,7 @@ public class Detail extends AppCompatActivity {
                 thread.start();
             }
         });
-                checkNetworkConnection();
+        checkNetworkConnection();
     }
 
     //Checkt of er netwerk verbinding is
@@ -161,72 +157,56 @@ public class Detail extends AppCompatActivity {
         return isConnected;
     }
 
+        public int checkLampNumber() {
+            char lampLetter = selectedLight.getLightnum().charAt(0);
+            int lampSerie = 0;
+            switch (lampLetter) {
+                case 'A':
+                    lampSerie = 0;
+                    break;
+                case 'B':
+                    lampSerie = 3;
+                    break;
+                case 'C':
+                    lampSerie = 6;
+                    break;
+            }
+            return lampSerie;
+        }
 
-    //Interne klasse voor het oversturen van dingen over het netwerk.
-    //Is een aparte thread dus voorkomt GUI freezes.
-    private class HTTPAsyncTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... urls) {
+        public void sendJSON() {
             try {
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("PUT");
+                conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+                conn.setRequestProperty("Accept", "application/json");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+
+                JSONObject jsonParam = new JSONObject();
                 try {
-                    return HttpPost();
+                    jsonParam.put("on", false);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    return "Error!";
                 }
-            } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
-            }
-    public int checkLampNumber() {
-        char lampLetter = selectedLight.getLightnum().charAt(0);
-        int lampSerie = 0;
-        switch (lampLetter) {
-            case 'A':
-                lampSerie = 0;
-                break;
-            case 'B':
-                lampSerie = 3;
-                break;
-            case 'C':
-                lampSerie = 6;
-                break;
-        }
-        return lampSerie;
-    }
 
-    public void sendJSON(){
-        try{
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("PUT");
-            conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
+                Log.i("JSON", jsonParam.toString());
+                DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+                os.writeBytes(jsonParam.toString());
 
-            JSONObject jsonParam = new JSONObject();
-            try {
-                jsonParam.put("on", false);
+                os.flush();
+                os.close();
 
-            } catch (JSONException e) {
+                Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+                Log.i("MSG", conn.getResponseMessage());
+
+                conn.disconnect();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            Log.i("JSON", jsonParam.toString());
-            DataOutputStream os = new DataOutputStream(conn.getOutputStream());
-            os.writeBytes(jsonParam.toString());
-
-            os.flush();
-            os.close();
-
-            Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-            Log.i("MSG", conn.getResponseMessage());
-
-            conn.disconnect();
-        }catch (Exception e){
-            e.printStackTrace();
         }
     }
-    }
+
 
 
