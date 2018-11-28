@@ -102,7 +102,7 @@ public class Detail extends AppCompatActivity implements HueListener{
                 brightnessvalue = i * 254 / 100;
                 brightnessvalueid.setText(String.valueOf(brightnessvalue + 1));
                 System.out.println("seekbar value" + brightnessvalue);
-
+                sendJSON();
 
             }
 
@@ -129,7 +129,7 @@ public class Detail extends AppCompatActivity implements HueListener{
                 saturationvalue = i * 254 / 100;
                 saturationvalueid.setText(String.valueOf((saturationvalue + 1)));
                 System.out.println("Seekbar saturation value" + saturationvalue);
-
+                sendJSON();
             }
 
             @Override
