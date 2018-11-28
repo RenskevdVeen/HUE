@@ -20,13 +20,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Detail extends AppCompatActivity  {
+import okhttp3.OkHttpClient;
+
+public class Detail extends AppCompatActivity {
     TextView connectedId;
     TextView resultId;
     Button testBrightnessId;
@@ -44,6 +48,8 @@ public class Detail extends AppCompatActivity  {
 
 
     TextView on;
+    Light selectedLight;
+    URL url;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +57,14 @@ public class Detail extends AppCompatActivity  {
 
 
         Intent intent = getIntent();
-        Light lights1 = (Light) intent.getSerializableExtra("LIGHT_OBJECT");
+        selectedLight = (Light) intent.getSerializableExtra("LIGHT_OBJECT");
+        String[] lampNumber = selectedLight.getLightnum().split("");
+        int fullLampNumber = Integer.valueOf(lampNumber[2]) + checkLampNumber();
+        try {
+            url = new URL("http://145.48.205.33/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB/lights/"+fullLampNumber+"/state");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
         name = findViewById(R.id.name_id);
         name.setText(lights1.getLightnum());
@@ -116,19 +129,23 @@ public class Detail extends AppCompatActivity  {
         //TESTCODE VAN SANDER
         connectedId = (TextView) findViewById(R.id.connectedId);
         resultId = (TextView) findViewById(R.id.resultId);
+        resultId.setText(url.toString());
         testBrightnessId = (Button) findViewById(R.id.testBrightnessId);
         testBrightnessId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new HTTPAsyncTask().execute("http://192.168.2.4/api/8144c280f65aa9c4749a7657ae82b1b");
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
+
+                thread.start();
             }
         });
                 checkNetworkConnection();
     }
-
-
-    //TESTCODE VAN SANDER
-
 
     //Checkt of er netwerk verbinding is
     public boolean checkNetworkConnection() {
@@ -161,56 +178,55 @@ public class Detail extends AppCompatActivity  {
             } catch (IOException e) {
                 return "Unable to retrieve web page. URL may be invalid.";
             }
+    public int checkLampNumber() {
+        char lampLetter = selectedLight.getLightnum().charAt(0);
+        int lampSerie = 0;
+        switch (lampLetter) {
+            case 'A':
+                lampSerie = 0;
+                break;
+            case 'B':
+                lampSerie = 3;
+                break;
+            case 'C':
+                lampSerie = 6;
+                break;
         }
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-            resultId.setText(result);
-        }
+        return lampSerie;
+    }
 
-        private String HttpPost() throws IOException, JSONException {
-            String result = "";
-
-            URL url = new URL("http://192.168.2.4/api/8144c280f65aa9c4749a7657ae82b1b");
-
-            // 1. create HttpURLConnection
+    public void sendJSON(){
+        try{
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
 
-            // 2. build JSON object
-            JSONObject jsonObject = buidJsonObject();
+            JSONObject jsonParam = new JSONObject();
+            try {
+                jsonParam.put("on", false);
 
-            // 3. add JSON content to POST request body
-            setPostRequestContent(conn, jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-            // 4. make POST request to the given URL
-            conn.connect();
+            Log.i("JSON", jsonParam.toString());
+            DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+            os.writeBytes(jsonParam.toString());
 
-            // 5. return response message
-            return conn.getResponseMessage() + "";
-
-        }
-        private JSONObject buidJsonObject() throws JSONException {
-
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.accumulate("lights", 254);
-
-
-            return jsonObject;
-        }
-        private void setPostRequestContent(HttpURLConnection conn,
-                                           JSONObject jsonObject) throws IOException {
-
-            OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-            writer.write(jsonObject.toString());
-            Log.i(MainActivity.class.toString(), jsonObject.toString());
-            writer.flush();
-            writer.close();
+            os.flush();
             os.close();
+
+            Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+            Log.i("MSG", conn.getResponseMessage());
+
+            conn.disconnect();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        }
+    }
     }
 
 
