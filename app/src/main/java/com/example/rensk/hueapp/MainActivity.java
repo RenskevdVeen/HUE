@@ -27,19 +27,13 @@ public class MainActivity extends AppCompatActivity implements HueListener {
         recyclerView = findViewById(R.id.recycle);
         recyclerView.setHasFixedSize(true);
 
-            hueAdapter = new HueAdapter(lights);
-
-
-
+        hueAdapter = new HueAdapter(lights);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-
-
-
         recyclerView.setAdapter(hueAdapter);
-
 
         apiManager = new HueApiManager(getApplicationContext(), this);
         apiManager.getHue();
+
 
         hueAdapter.setOnItemClickListener(new HueAdapter.ClickListener() {
             @Override
@@ -66,4 +60,5 @@ public class MainActivity extends AppCompatActivity implements HueListener {
 
     @Override
     public void onLightsError(String err) {Log.d("", ""); }
+
 }
