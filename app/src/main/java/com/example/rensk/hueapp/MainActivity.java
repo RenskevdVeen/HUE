@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements HueListener {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(hueAdapter);
 
+
         apiManager = new HueApiManager(getApplicationContext(), this);
         apiManager.getHue();
 

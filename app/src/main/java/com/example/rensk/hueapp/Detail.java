@@ -19,6 +19,14 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.DataOutputStream;
@@ -48,10 +56,9 @@ public class Detail extends AppCompatActivity implements HueListener{
     int hue;
     float[] huevalue = new float[3];
     Switch onoffswitch;
-    boolean switchValue;
     Light selectedLight;
     URL url;
-
+    boolean switchvalue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +102,7 @@ public class Detail extends AppCompatActivity implements HueListener{
                 brightnessvalueid.setText(String.valueOf(brightnessvalue + 1));
                 System.out.println("seekbar value" + brightnessvalue);
 
+
             }
 
             @Override
@@ -120,6 +128,7 @@ public class Detail extends AppCompatActivity implements HueListener{
                 saturationvalue = i * 254 / 100;
                 saturationvalueid.setText(String.valueOf((saturationvalue + 1)));
                 System.out.println("Seekbar saturation value" + saturationvalue);
+
             }
 
             @Override
@@ -159,6 +168,7 @@ public class Detail extends AppCompatActivity implements HueListener{
                             hue = (int) (huevalue[0] * 182.04);
                             System.out.println("Red" + redValue + " blue" + blueValue + " Green " + greenValue + " Color" + pixel);
                             System.out.println(hue);
+                            sendJSON();
                             break;
                         }else{
                             System.out.println("pixel is 0");
@@ -181,10 +191,11 @@ public class Detail extends AppCompatActivity implements HueListener{
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (onoffswitch.isChecked()){
                     on.setText(R.string.on);
-
+                    switchvalue = true;
                     sendJSON();
                 }else{
                     on.setText(R.string.off);
+                    switchvalue = false;
                     sendJSON();
                 }
             }
@@ -240,7 +251,11 @@ public class Detail extends AppCompatActivity implements HueListener{
 
                 JSONObject jsonParam = new JSONObject();
                 try {
-                    jsonParam.put("on", false);
+                    jsonParam.put("on", switchvalue);
+                    jsonParam.put("bri", brightnessvalue);
+                    jsonParam.put("hue", hue);
+                    jsonParam.put("sat", saturationvalue);
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -261,7 +276,6 @@ public class Detail extends AppCompatActivity implements HueListener{
                 e.printStackTrace();
             }
         }
-
     @Override
     public void onLightsAvailable(Light light) {
 
