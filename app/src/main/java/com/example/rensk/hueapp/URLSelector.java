@@ -2,14 +2,18 @@ package com.example.rensk.hueapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -54,45 +58,80 @@ public class URLSelector extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 selectedUrlString = "http://145.48.205.33/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB";
-
                 try {
-                    selectedUrl = new URL(selectedUrlString);
-
-                } catch (MalformedURLException e) {
+                    if(selectedUrlString != null || doesURLExist() == false) {
+                        Intent mainIntent = new Intent(URLSelector.this, MainActivity.class);
+                        mainIntent.putExtra("URL", selectedUrlString);
+                        startActivity(mainIntent);
+                    }
+                    else{
+                        Snackbar snackbar = Snackbar.make(findViewById(R.id.urlSelectorId), "kan geen verbinding maken.", 1000);
+                        snackbar.show();
+                    }
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                Intent mainIntent = new Intent(URLSelector.this, MainActivity.class);
-                mainIntent.putExtra("URL", selectedUrlString);
-                startActivity(mainIntent);
             }
         });
 
         schoolEmuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //selectedUrlString = "http://145.48.205.33/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB";
+                try {
+                    if(selectedUrlString != null || doesURLExist() == false) {
+                        Intent mainIntent = new Intent(URLSelector.this, MainActivity.class);
+                        mainIntent.putExtra("URL", selectedUrlString);
+                        startActivity(mainIntent);
+                    }
+                    else{
+                        Snackbar snackbar = Snackbar.make(findViewById(R.id.urlSelectorId), "kan geen verbinding maken.", 1000);
+                        snackbar.show();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         thuisEmuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                selectedUrlString = "";
+                try {
+                    if(selectedUrlString != null || doesURLExist() == false) {
+                        Intent mainIntent = new Intent(URLSelector.this, MainActivity.class);
+                        mainIntent.putExtra("URL", selectedUrlString);
+                        startActivity(mainIntent);
+                    }
+                    else{
+                        Snackbar snackbar = Snackbar.make(findViewById(R.id.urlSelectorId), "kan geen verbinding maken.", 1000);
+                        snackbar.show();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
-    public static URLSelector getInstance()
+    public boolean doesURLExist() throws IOException
     {
-        if (urlSelector == null)
-            urlSelector = new URLSelector();
+        // We want to check the current URL
+        selectedUrl = new URL(selectedUrlString);
+        HttpURLConnection.setFollowRedirects(false);
 
-        return urlSelector;
-    }
+        HttpURLConnection httpURLConnection = (HttpURLConnection) selectedUrl.openConnection();
 
-    public URL getSelectedUrl() {
-        return selectedUrl;
+        // We don't need to get data
+        httpURLConnection.setRequestMethod("HEAD");
+
+        // Some websites don't like programmatic access so pretend to be a browser
+        httpURLConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 (.NET CLR 3.5.30729)");
+        int responseCode = httpURLConnection.getResponseCode();
+
+        // We only accept response code 200
+        return responseCode == HttpURLConnection.HTTP_OK;
     }
 }
 
