@@ -1,8 +1,12 @@
 package com.example.rensk.hueapp;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,20 +48,16 @@ public class AllDetail extends AppCompatActivity {
     Switch onoffallswitch;
     URL url;
     boolean switchValue;
+    TextView connectedId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_detail);
 
-        try {
-            for (int i = 1; i < 10; i++) {
-                if (i == 4) continue;
-                url = new URL(URLSelector.getInstance().getSelectedUrl() + "/lights/" + i + "/state");
-            }
-        }catch(MalformedURLException e){
-            e.printStackTrace();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
-        }
         nameall = findViewById(R.id.all_name_id);
         nameall.setText(R.string.all);
 
@@ -172,38 +172,60 @@ public class AllDetail extends AppCompatActivity {
                 }
             }
         });
+        connectedId =  findViewById(R.id.connectedallId);
+
+        checkNetworkConnection();
 
     }
+    public boolean checkNetworkConnection() {
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        boolean isConnected = false;
+        if (networkInfo != null && (isConnected = networkInfo.isConnected())) {
+            connectedId.setText("Connected: " + networkInfo.getTypeName());
+        } else {
+            connectedId.setText("Not Connected!!!");
+        }
+        return isConnected;
+    }
+
     public void sendJSON() {
         try {
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("PUT");
-            conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
+            for (int i = 1; i < 10; i++) {
+                if (i == 4) continue;
+                url = new URL(URLSelector.getInstance().getSelectedUrl() + "/lights/" + i + "/state");
 
-            JSONObject jsonParam = new JSONObject();
-            try {
-                jsonParam.put("on", switchValue);
-                jsonParam.put("bri", brightnessvalueallint);
-                jsonParam.put("hue", hue);
-                jsonParam.put("sat", saturationvalueAllInt);
-            } catch (JSONException e) {
-                e.printStackTrace();
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("PUT");
+                conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+                conn.setRequestProperty("Accept", "application/json");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+
+                JSONObject jsonParam = new JSONObject();
+                try {
+                    jsonParam.put("on", switchValue);
+                    jsonParam.put("bri", brightnessvalueallint);
+                    jsonParam.put("hue", hue);
+                    jsonParam.put("sat", saturationvalueAllInt);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.i("JSON", jsonParam.toString());
+                Log.i("URL", url.toString());
+                DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+                os.writeBytes(jsonParam.toString());
+
+                os.flush();
+                os.close();
+
+                Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+                Log.i("MSG", conn.getResponseMessage());
+
+                conn.disconnect();
             }
-
-            Log.i("JSON", jsonParam.toString());
-            DataOutputStream os = new DataOutputStream(conn.getOutputStream());
-            os.writeBytes(jsonParam.toString());
-
-            os.flush();
-            os.close();
-
-            Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-            Log.i("MSG", conn.getResponseMessage());
-
-            conn.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
         }

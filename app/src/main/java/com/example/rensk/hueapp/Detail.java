@@ -20,13 +20,6 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.DataOutputStream;
@@ -60,10 +53,12 @@ public class Detail extends AppCompatActivity implements HueListener{
     Light selectedLight;
     URL url;
     boolean switchvalue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -205,10 +200,10 @@ public class Detail extends AppCompatActivity implements HueListener{
 
 
         connectedId = (TextView) findViewById(R.id.connectedId);
-        resultId = (TextView) findViewById(R.id.resultId);
-        testBrightnessId = (Button) findViewById(R.id.testBrightnessId);
+
         checkNetworkConnection();
     }
+
 
     //Checkt of er netwerk verbinding is
     public boolean checkNetworkConnection() {

@@ -51,35 +51,15 @@
         app:layout_constraintStart_toEndOf="@+id/brightnessvalue_id"
         app:layout_constraintTop_toTopOf="@+id/brightnessId" />
 
-    <Button
-        android:id="@+id/testBrightnessId"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/color_id" />
-
     <TextView
         android:id="@+id/connectedId"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="22dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/testBrightnessId" />
-
-    <TextView
-        android:id="@+id/resultId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connectedId" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/brightnessvalue_id"
@@ -145,12 +125,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:background="@drawable/wheel"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.933"
-        app:layout_constraintStart_toEndOf="@+id/testBrightnessId"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/color_id"
         app:srcCompat="@drawable/wheelcolor" />
 
