@@ -1,9 +1,12 @@
 package com.example.rensk.hueapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.Button;
@@ -23,13 +26,29 @@ public class URLSelector extends AppCompatActivity {
     Button schoolEmuButton;
     Button thuisEmuButton;
     String selectedUrlString;
-    URL selectedUrl;
-    static URLSelector urlSelector;
     Switch urlsave;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+    Boolean saveChecked;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_urlselector);
+
+
+        //Shared preferences
+        sharedPreferences = getSharedPreferences("mypref", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
+        if(sharedPreferences.contains("saveURL")){
+            if(sharedPreferences.getBoolean("saveSetting", true)){
+                Intent mainIntent = new Intent(URLSelector.this, MainActivity.class);
+                mainIntent.putExtra("URL", sharedPreferences.getString("saveURL", null));
+                startActivity(mainIntent);
+                //this.finish();
+            }
+        }
+        saveChecked = false;
 
     selectUrlText = findViewById(R.id.pleaseSelectURlTextId);
         selectUrlText.setText("Klik op het netwerk dat je wilt gebruiken.");
@@ -46,92 +65,66 @@ public class URLSelector extends AppCompatActivity {
         urlsave.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-               if (urlsave.isChecked()){
-                   System.out.println( "Checked start saving");
-               }else{
-
+                    if(urlsave.isChecked()){
+                        saveChecked = true;
+                    }
+                    else saveChecked = false;
                }
-            }
         });
 
         laButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectedUrlString = "http://145.48.205.33/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB";
-                try {
-                    if(selectedUrlString != null || doesURLExist() == false) {
+                        if(saveChecked){
+                            editor.clear();
+                            String saveurl = selectedUrlString;
+                            editor.putString("saveURL", saveurl);
+                            editor.putBoolean("saveSetting", true);
+                            editor.apply();
+                        }
                         Intent mainIntent = new Intent(URLSelector.this, MainActivity.class);
                         mainIntent.putExtra("URL", selectedUrlString);
                         startActivity(mainIntent);
                     }
-                    else{
-                        Snackbar snackbar = Snackbar.make(findViewById(R.id.urlSelectorId), "kan geen verbinding maken.", 1000);
-                        snackbar.show();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         });
 
         schoolEmuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //selectedUrlString = "http://145.48.205.33/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB";
-                try {
-                    if(selectedUrlString != null || doesURLExist() == false) {
-                        Intent mainIntent = new Intent(URLSelector.this, MainActivity.class);
-                        mainIntent.putExtra("URL", selectedUrlString);
-                        startActivity(mainIntent);
-                    }
-                    else{
-                        Snackbar snackbar = Snackbar.make(findViewById(R.id.urlSelectorId), "kan geen verbinding maken.", 1000);
-                        snackbar.show();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                selectedUrlString = "http://192.168.42.31/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB";
+                if(saveChecked){
+                    editor.clear();
+                    String saveurl = selectedUrlString;
+                    editor.putString("saveURL", saveurl);
+                    editor.putBoolean("saveSetting", true);
+                    editor.apply();
                 }
+                Intent mainIntent = new Intent(URLSelector.this, MainActivity.class);
+                mainIntent.putExtra("URL", selectedUrlString);
+                startActivity(mainIntent);
             }
         });
 
         thuisEmuButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                selectedUrlString = "";
-                try {
-                    if(selectedUrlString != null || doesURLExist() == false) {
-                        Intent mainIntent = new Intent(URLSelector.this, MainActivity.class);
-                        mainIntent.putExtra("URL", selectedUrlString);
-                        startActivity(mainIntent);
-                    }
-                    else{
-                        Snackbar snackbar = Snackbar.make(findViewById(R.id.urlSelectorId), "kan geen verbinding maken.", 1000);
-                        snackbar.show();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+            public void onClick(View view){
+                    selectedUrlString = "http://192.168.2.4/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB";
+                if(saveChecked){
+                    editor.clear();
+                    String saveurl = selectedUrlString;
+                    editor.putString("saveURL", saveurl);
+                    editor.putBoolean("saveSetting", true);
+                    editor.apply();
                 }
-            }
+                    Intent mainIntent = new Intent(URLSelector.this, MainActivity.class);
+                    mainIntent.putExtra("URL", selectedUrlString);
+                    startActivity(mainIntent);
+                }
         });
     }
 
-    public boolean doesURLExist() throws IOException
-    {
-        // We want to check the current URL
-        selectedUrl = new URL(selectedUrlString);
-        HttpURLConnection.setFollowRedirects(false);
 
-        HttpURLConnection httpURLConnection = (HttpURLConnection) selectedUrl.openConnection();
 
-        // We don't need to get data
-        httpURLConnection.setRequestMethod("HEAD");
-
-        // Some websites don't like programmatic access so pretend to be a browser
-        httpURLConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 (.NET CLR 3.5.30729)");
-        int responseCode = httpURLConnection.getResponseCode();
-
-        // We only accept response code 200
-        return responseCode == HttpURLConnection.HTTP_OK;
-    }
 }
 

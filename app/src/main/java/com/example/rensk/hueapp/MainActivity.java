@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -99,4 +100,5 @@ public class MainActivity extends AppCompatActivity implements HueListener, Seri
 
     @Override
     public void onLightsError(String err) {Log.d("", ""); }
+
 }
