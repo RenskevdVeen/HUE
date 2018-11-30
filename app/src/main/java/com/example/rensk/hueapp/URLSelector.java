@@ -7,14 +7,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class URLSelector extends AppCompatActivity {
     TextView selectUrlText;
     Button laButton;
     Button schoolEmuButton;
     Button thuisEmuButton;
-    String selectedUrl;
+    String selectedUrlString;
+    URL selectedUrl;
     static URLSelector urlSelector;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +37,17 @@ public class URLSelector extends AppCompatActivity {
         laButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedUrl = "http://145.48.205.33/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB";
+                selectedUrlString = "http://145.48.205.33/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB";
+
+                try {
+                    selectedUrl = new URL(selectedUrlString);
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+
                 Intent mainIntent = new Intent(URLSelector.this, MainActivity.class);
+                mainIntent.putExtra("URL", selectedUrlString);
                 startActivity(mainIntent);
             }
         });
@@ -62,7 +75,7 @@ public class URLSelector extends AppCompatActivity {
         return urlSelector;
     }
 
-    public String getSelectedUrl() {
+    public URL getSelectedUrl() {
         return selectedUrl;
     }
 }

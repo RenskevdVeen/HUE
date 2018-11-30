@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -30,8 +31,6 @@ import java.net.URL;
 
 public class Detail extends AppCompatActivity implements HueListener{
     TextView connectedId;
-    TextView resultId;
-    Button testBrightnessId;
     TextView name;
     TextView brightness;
     SeekBar seekbarbrightness;
@@ -59,6 +58,7 @@ public class Detail extends AppCompatActivity implements HueListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -67,8 +67,9 @@ public class Detail extends AppCompatActivity implements HueListener{
         selectedLight = (Light) intent.getSerializableExtra("LIGHT_OBJECT");
         String[] lampNumber = selectedLight.getLightnum().split("");
         int fullLampNumber = Integer.valueOf(lampNumber[2]) + checkLampNumber();
+
         try {
-            url = new URL(URLSelector.getInstance().getSelectedUrl() + "/lights/" + fullLampNumber + "/state");
+            url = new URL(MainActivity.url + "/lights/" + fullLampNumber + "/state");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -289,6 +290,18 @@ public class Detail extends AppCompatActivity implements HueListener{
     @Override
     public void onLightsError(String err) {
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
 

@@ -10,6 +10,7 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -54,6 +55,8 @@ public class AllDetail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_detail);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -194,7 +197,7 @@ public class AllDetail extends AppCompatActivity {
         try {
             for (int i = 1; i < 10; i++) {
                 if (i == 4) continue;
-                url = new URL(URLSelector.getInstance().getSelectedUrl() + "/lights/" + i + "/state");
+                url = new URL(MainActivity.url + "/lights/" + i + "/state");
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("PUT");
@@ -228,6 +231,17 @@ public class AllDetail extends AppCompatActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

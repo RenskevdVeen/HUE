@@ -14,7 +14,7 @@ import android.widget.TextView;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements HueListener {
+public class MainActivity extends AppCompatActivity implements HueListener, Serializable {
 
     HueApiManager apiManager;
     RecyclerView recyclerView;
@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements HueListener {
     HueAdapter hueAdapter;
     TextView name;
     Button all;
+    static String url;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements HueListener {
         hueAdapter = new HueAdapter(lights);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(hueAdapter);
+
+        Intent intent = getIntent();
+        url = intent.getSerializableExtra("URL").toString();
 
 
         apiManager = new HueApiManager(getApplicationContext(), this);

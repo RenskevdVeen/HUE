@@ -1,5 +1,6 @@
 package com.example.rensk.hueapp;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -16,7 +17,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class HueApiManager {
+import java.io.Serializable;
+
+public class HueApiManager implements Serializable {
     RequestQueue queue;
     HueListener listener;
 
@@ -25,8 +28,9 @@ public class HueApiManager {
         this.listener = listener;
     }
 
+
     public void getHue(){
-        final String url = URLSelector.getInstance().getSelectedUrl();
+        final String url = MainActivity.url;
         final JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
