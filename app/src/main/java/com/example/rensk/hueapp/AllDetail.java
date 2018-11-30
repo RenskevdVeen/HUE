@@ -52,7 +52,7 @@ public class AllDetail extends AppCompatActivity {
         try {
             for (int i = 1; i < 10; i++) {
                 if (i == 4) continue;
-                url = new URL("http://145.48.205.33/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB/lights/" + i + "/state");
+                url = new URL(URLSelector.getInstance().getSelectedUrl() + "/lights/" + i + "/state");
             }
         }catch(MalformedURLException e){
             e.printStackTrace();

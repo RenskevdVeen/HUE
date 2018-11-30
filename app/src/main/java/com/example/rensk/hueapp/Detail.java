@@ -73,7 +73,7 @@ public class Detail extends AppCompatActivity implements HueListener{
         String[] lampNumber = selectedLight.getLightnum().split("");
         int fullLampNumber = Integer.valueOf(lampNumber[2]) + checkLampNumber();
         try {
-            url = new URL("http://145.48.205.33/api/iYrmsQq1wu5FxF9CPqpJCnm1GpPVylKBWDUsNDhB/lights/" + fullLampNumber + "/state");
+            url = new URL(URLSelector.getInstance().getSelectedUrl() + "/lights/" + fullLampNumber + "/state");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
