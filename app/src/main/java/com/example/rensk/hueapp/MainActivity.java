@@ -1,6 +1,7 @@
 package com.example.rensk.hueapp;
 
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -40,7 +41,14 @@ public class MainActivity extends AppCompatActivity implements HueListener, Seri
         hueAdapter = new HueAdapter(lights);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(hueAdapter);
-
+        final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData(); // your code
+                pullToRefresh.setRefreshing(false);
+            }
+        });
         Intent intent = getIntent();
         url = intent.getSerializableExtra("URL").toString();
 
@@ -72,6 +80,14 @@ public class MainActivity extends AppCompatActivity implements HueListener, Seri
 
             }
         });
+    }
+
+    private void refreshData() {
+        lights.removeAll(lights);
+        apiManager.getHue();
+        hueAdapter.notifyDataSetChanged();
+        hueAdapter = new HueAdapter(lights);
+        recyclerView.setAdapter(hueAdapter);
     }
 
     @Override

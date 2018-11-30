@@ -65,7 +65,7 @@ public class AllDetail extends AppCompatActivity {
         nameall.setText(R.string.all);
 
         onall = findViewById(R.id.onoffall_id);
-        onall.setText("");
+        onall.setText("Turn on first ->");
 
         brightnessAll = findViewById(R.id.brightnessAll_id);
         brightnessAll.setText(R.string.brightness);
@@ -78,7 +78,7 @@ public class AllDetail extends AppCompatActivity {
                 brightnessvalueallint = i * 254 / 100;
                 brightnessValueAll.setText(String.valueOf(brightnessvalueallint + 1));
                 System.out.println("seekbar value all" + brightnessvalueallint);
-
+                sendJSON();
             }
 
             @Override
@@ -105,7 +105,7 @@ public class AllDetail extends AppCompatActivity {
                saturationvalueAllInt= i * 254 / 100;
                 saturationValueAll.setText(String.valueOf(saturationvalueAllInt + 1));
                 System.out.println("seekbar value all" + saturationvalueAllInt);
-
+                sendJSON();
             }
 
             @Override
@@ -148,7 +148,7 @@ public class AllDetail extends AppCompatActivity {
                             hue = (int) (huevalue[0] * 182.04);
                             System.out.println("Red" + redValue + " blue" + blueValue + " Green " + greenValue + " Color" + pixel);
                             System.out.println(hue);
-
+                            sendJSON();
                             break;
                         }else{
                             System.out.println("pixel is 0");
@@ -164,10 +164,12 @@ public class AllDetail extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (onoffallswitch.isChecked()){
+
                     onall.setText(R.string.on);
                     switchValue = true;
                     sendJSON();
                 }else{
+
                     onall.setText(R.string.off);
                     switchValue= false;
                     sendJSON();
@@ -232,6 +234,7 @@ public class AllDetail extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

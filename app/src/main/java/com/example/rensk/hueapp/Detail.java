@@ -53,6 +53,7 @@ public class Detail extends AppCompatActivity implements HueListener{
     URL url;
     boolean switchvalue;
     HueApiManager apiManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +71,26 @@ public class Detail extends AppCompatActivity implements HueListener{
         String[] lampNumber = selectedLight.getLightnum().split("");
         int fullLampNumber = Integer.valueOf(lampNumber[2]) + checkLampNumber();
 
+        if(selectedLight.getAan().equals("true")){
+            switchvalue = true;
+        }
+        else{
+            switchvalue = false;
+        }
+        brightnessvalue = selectedLight.getBrightness();
+        hue = selectedLight.getHue();
+        saturationvalue = selectedLight.getSaturation();
+
+
         try {
+            if (fullLampNumber == 2 || fullLampNumber == 3){
+                if (fullLampNumber == 2){
+                    fullLampNumber =3;
+                }else{
+                    fullLampNumber = 2;
+                }
+            }
+
             url = new URL(MainActivity.url + "/lights/" + fullLampNumber + "/state");
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -81,13 +101,7 @@ public class Detail extends AppCompatActivity implements HueListener{
         brightness = findViewById(R.id.brightnessId);
         brightness.setText(R.string.brightness);
         brightnessvalueid = findViewById(R.id.brightnessvalue_id);
-        on = findViewById(R.id.onoff_id);
-        if (selectedLight.getAan().equals("true")) {
-            on.setText(R.string.on);
-        } else {
-            on.setText(R.string.off);
-        }
-        brightnessvalueid.setText(String.valueOf(brightnessvalue));
+
         seekbarbrightness = findViewById(R.id.seekbarbrightness);
         System.out.println(selectedLight.getBrightness());
         seekbarbrightness.setProgress((selectedLight.getBrightness()*100/254));
@@ -98,7 +112,7 @@ public class Detail extends AppCompatActivity implements HueListener{
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 brightnessvalue = i * 254 / 100;
-                brightnessvalueid.setText(String.valueOf(brightnessvalue + 1));
+                brightnessvalueid.setText(String.valueOf(brightnessvalue+1));
                 System.out.println("seekbar value" + brightnessvalue);
                 sendJSON();
 
@@ -124,7 +138,9 @@ public class Detail extends AppCompatActivity implements HueListener{
         seekBarSaturation.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                System.out.println("dit is i"+ i);
                 saturationvalue = i * 254 / 100;
+                System.out.println("saturation"+ saturationvalue);
                 saturationvalueid.setText(String.valueOf((saturationvalue + 1)));
                 System.out.println("Seekbar saturation value" + saturationvalue);
                 sendJSON();
@@ -164,9 +180,10 @@ public class Detail extends AppCompatActivity implements HueListener{
                             blueValue = Color.blue(pixel);
                             greenValue = Color.green(pixel);
                             Color.RGBToHSV(redValue, greenValue, blueValue, huevalue);
+                            System.out.println("huevalue"+ huevalue[0]);
                             hue = (int) (huevalue[0] * 182.04);
                             System.out.println("Red" + redValue + " blue" + blueValue + " Green " + greenValue + " Color" + pixel);
-                            System.out.println(hue);
+                            System.out.println("hue"+hue);
                             sendJSON();
                             break;
                         }else{
@@ -178,12 +195,14 @@ public class Detail extends AppCompatActivity implements HueListener{
             }
         });
 
-
+        on = findViewById(R.id.onoff_id);
         onoffswitch = findViewById(R.id.switchdetail_id);
         if (selectedLight.getAan().equals("true")){
+            on.setText(R.string.on);
             onoffswitch.setChecked(true);
         }else{
-
+            on.setText(R.string.off);
+            onoffswitch.setChecked(false);
         }
         onoffswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -192,7 +211,7 @@ public class Detail extends AppCompatActivity implements HueListener{
                     on.setText(R.string.on);
                     switchvalue = true;
                     sendJSON();
-                }else{
+                }else if (!onoffswitch.isChecked()){
                     on.setText(R.string.off);
                     switchvalue = false;
                     sendJSON();
@@ -298,7 +317,6 @@ public class Detail extends AppCompatActivity implements HueListener{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                apiManager.getHue();
                 onBackPressed();
                 return true;
 
