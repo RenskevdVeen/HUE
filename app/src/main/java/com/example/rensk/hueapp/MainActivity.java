@@ -83,5 +83,4 @@ public class MainActivity extends AppCompatActivity implements HueListener, Seri
 
     @Override
     public void onLightsError(String err) {Log.d("", ""); }
-
 }

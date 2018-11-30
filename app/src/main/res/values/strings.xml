@@ -7,4 +7,5 @@
     <string name="color">Color</string>
     <string name="hue">Hue Lights</string>
     <string name="all">All lights</string>
+    <string name="savedata">Save data?</string>
 </resources>

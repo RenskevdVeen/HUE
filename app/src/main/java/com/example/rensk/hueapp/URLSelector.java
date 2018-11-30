@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.io.Serializable;
@@ -19,6 +21,7 @@ public class URLSelector extends AppCompatActivity {
     String selectedUrlString;
     URL selectedUrl;
     static URLSelector urlSelector;
+    Switch urlsave;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +36,19 @@ public class URLSelector extends AppCompatActivity {
         schoolEmuButton.setText("Lampen van emulator op school");
         thuisEmuButton = findViewById(R.id.thuisEmuSelectId);
         thuisEmuButton.setText("Lampen van emulator thuis");
+
+        urlsave = findViewById(R.id.urlswitch);
+        urlsave.setText(R.string.savedata);
+        urlsave.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+               if (urlsave.isChecked()){
+                   System.out.println( "Checked start saving");
+               }else{
+
+               }
+            }
+        });
 
         laButton.setOnClickListener(new View.OnClickListener() {
             @Override

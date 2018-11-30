@@ -52,7 +52,7 @@ public class Detail extends AppCompatActivity implements HueListener{
     Light selectedLight;
     URL url;
     boolean switchvalue;
-
+    HueApiManager apiManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +62,8 @@ public class Detail extends AppCompatActivity implements HueListener{
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
+        apiManager = new HueApiManager(getApplicationContext(), this);
 
         Intent intent = getIntent();
         selectedLight = (Light) intent.getSerializableExtra("LIGHT_OBJECT");
@@ -296,6 +298,7 @@ public class Detail extends AppCompatActivity implements HueListener{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                apiManager.getHue();
                 onBackPressed();
                 return true;
 
